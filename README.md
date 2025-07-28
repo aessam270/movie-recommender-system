@@ -52,6 +52,8 @@ python movie-recommender.py
 
 ## 📸 Screenshots
 ![Homepage](screenshots/Home-page.png)
+![Searchresult](screenshots/Search-result.png)
+![charts](screenshots/chart.png)
 
 ## 📈 Example Output
 
