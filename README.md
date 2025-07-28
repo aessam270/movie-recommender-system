@@ -51,7 +51,7 @@ python movie-recommender.py
 ```
 
 ## 📸 Screenshots
-https://github.com/aessam270/movie-recommender-system/blob/8d40a19f7de371886663b1db47e339730c2de851/search%20result.png
+8d40a19f7de371886663b1db47e339730c2de851/search%20result.png
 
 ## 📈 Example Output
 
