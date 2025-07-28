@@ -51,8 +51,7 @@ python movie-recommender.py
 ```
 
 ## 📸 Screenshots
-![Screenshot](/screenshots
-/Home-page.png)
+screenshots/Home-page.png
 
 ## 📈 Example Output
 
