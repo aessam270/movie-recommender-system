@@ -42,12 +42,12 @@ You can get the data from: [MovieLens Dataset](https://grouplens.org/datasets/mo
 
 ### Run the Streamlit Web App
 ```bash
-streamlit run movie_recommender.py
+streamlit run movie-recommender.py
 ```
 
 ### Run as Python Script
 ```bash
-python movie_recommender.py
+python movie-recommender.py
 ```
 
 ## 📸 Screenshots
