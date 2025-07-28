@@ -21,7 +21,7 @@ A simple movie recommendation system built with Python that suggests movies base
 
 ```bash
 # Clone the repository
-git clone https://github.com/yourusername/movie-recommender.git
+git clone https://github.com/aessam270/movie-recommender.git
 cd movie-recommender
 
 # Install required packages
