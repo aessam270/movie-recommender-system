@@ -51,7 +51,7 @@ python movie-recommender.py
 ```
 
 ## 📸 Screenshots
-Home page.png
+<img src="homepage.png" alt="Home-page" width="600">
 
 ## 📈 Example Output
 
