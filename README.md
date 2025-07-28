@@ -27,8 +27,7 @@ cd movie-recommender
 # Install required packages
 pip install pandas matplotlib streamlit numpy
 
-# Or install from requirements.txt
-pip install -r requirements.txt
+
 ```
 
 ## 📁 Data Setup
