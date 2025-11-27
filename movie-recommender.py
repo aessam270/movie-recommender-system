@@ -56,55 +56,91 @@ def plot_top_movies(movie_stats, top_n=10):
     plt.tight_layout()
     plt.show()
 
-# Main execution
-if __name__ == "__main__":
-    # Load data
-    df, movie_stats = load_and_prepare_data()
-    movie_matrix = create_movie_matrix(df)
-    
-    # Get recommendations
-    movie_title = "Toy Story (1995)"
-    recommendations = get_recommendations(movie_matrix, movie_stats, movie_title)
-    
-    print(f"Movies similar to '{movie_title}':")
-    print(recommendations[['correlation', 'average_rating', 'rating_count']].head())
-    
-    # Plot top movies
-    plot_top_movies(movie_stats)
-
-
-
-# Streamlit app 
 def streamlit_app():
     st.title("🎬 Movie Recommender")
     
-    
-    # Load data 
-    df, movie_stats = load_and_prepare_data()
-    movie_matrix = create_movie_matrix(df)
-    
-    movie_name = st.text_input("Enter a movie:")
-    
-    if movie_name:
-        recommendations = get_recommendations(movie_matrix, movie_stats, movie_name)
+    try:
+        # Load data 
+        with st.spinner('Loading data...'):
+            df, movie_stats = load_and_prepare_data()
+            movie_matrix = create_movie_matrix(df)
         
-        if isinstance(recommendations, str):  # Error message
-            st.error(recommendations)
-        else:
-            st.write("**Similar Movies:**")
-            for title, row in recommendations.iterrows():
-                st.write(f"• {title} - Rating: {row['average_rating']:.1f} ⭐")
+        st.success("Data loaded successfully!")
+        
+        # Sidebar for stats
+        st.sidebar.header("Dataset Stats")
+        st.sidebar.write(f"Total Movies: {len(movie_stats)}")
+        st.sidebar.write(f"Total Ratings: {len(df)}")
+        
+        # Main content
+        col1, col2 = st.columns([2, 1])
+        
+        with col1:
+            st.subheader("Get Recommendations")
+            movie_name = st.selectbox(
+                "Select a movie:",
+                options=movie_stats.index.sort_values(),
+                index=None,
+                placeholder="Type to search..."
+            )
+            
+            if movie_name:
+                recommendations = get_recommendations(movie_matrix, movie_stats, movie_name)
+                
+                if isinstance(recommendations, str):
+                    st.error(recommendations)
+                else:
+                    st.write("### Similar Movies")
+                    for title, row in recommendations.iterrows():
+                        with st.expander(f"{title} (Rating: {row['average_rating']:.1f}⭐)"):
+                            st.write(f"Correlation: {row['correlation']:.2f}")
+                            st.write(f"Number of Ratings: {int(row['rating_count'])}")
+                            
+        with col2:
+            st.subheader("Top Rated Movies")
+            # Use st.pyplot for the plot
+            top_movies = movie_stats[movie_stats['rating_count'] > 50].head(10)
+            fig, ax = plt.subplots(figsize=(6, 8))
+            ax.barh(range(len(top_movies)), top_movies['average_rating'])
+            ax.set_yticks(range(len(top_movies)))
+            ax.set_yticklabels(top_movies.index)
+            ax.set_xlabel('Average Rating')
+            ax.invert_yaxis()
+            st.pyplot(fig)
 
+    except FileNotFoundError:
+        st.error("Data files not found! Please run setup_data.py first.")
+    except Exception as e:
+        st.error(f"An error occurred: {e}")
+
+
+# Main execution
 if __name__ == "__main__":
     import sys
+    
+    # Check if running with Streamlit
     if 'streamlit' in sys.modules:
         streamlit_app()
     else:
         # Regular Python execution
-        df, movie_stats = load_and_prepare_data()
-        movie_matrix = create_movie_matrix(df)
-        
-        movie_title = "Toy Story (1995)"
-        recommendations = get_recommendations(movie_matrix, movie_stats, movie_title)
-        print(f"Movies similar to '{movie_title}':")
-        print(recommendations[['correlation', 'average_rating', 'rating_count']].head())
+        try:
+            df, movie_stats = load_and_prepare_data()
+            movie_matrix = create_movie_matrix(df)
+            
+            movie_title = "Toy Story (1995)"
+            recommendations = get_recommendations(movie_matrix, movie_stats, movie_title)
+            
+            print(f"Movies similar to '{movie_title}':")
+            if isinstance(recommendations, str):
+                print(recommendations)
+            else:
+                print(recommendations[['correlation', 'average_rating', 'rating_count']].head())
+            
+            # Plot top movies
+            plot_top_movies(movie_stats)
+            
+        except FileNotFoundError:
+            print("Error: Data files not found!")
+            print("Please run 'python setup_data.py' first to download the dataset.")
+        except Exception as e:
+            print(f"An error occurred: {e}")
